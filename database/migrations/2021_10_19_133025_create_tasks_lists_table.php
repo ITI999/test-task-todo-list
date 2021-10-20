@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateTasksListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('tasks_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique('email');
-            $table->string('password');
+            $table->string('name')->nullable(false);
+            $table->string('description');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('tasks_lists');
     }
 }

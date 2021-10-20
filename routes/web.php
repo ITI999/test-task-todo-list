@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,33 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+})->name('home');
+
+Route::get('/home', function () {
+    return view('home');
+});
+
+
+
+Route::get('/login',function (){
+    if(Auth::check()){
+        return redirect(route('home'));
+    }
+   return view('login');
+})->name('login');
+
+Route::get('/register',function (){
+    if(Auth::check()){
+        return redirect(route('home'));
+    }
+   return view('register');
+})->name('register');
+
+Route::post('/login',[UserController::class,'login']);
+Route::post('/register',[UserController::class,'register']);
+
+Route::get('/logout', function(){
+    Auth::logout();
+    return redirect(route('home'));
 });
