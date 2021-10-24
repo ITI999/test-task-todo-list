@@ -15,8 +15,8 @@ class CreateTasksListsTable extends Migration
     {
         Schema::create('tasks_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable(false);
-            $table->string('description');
+            $table->text('title');
+            $table->text('description')->nullable(true);
             $table->foreignId('user_id');
             $table->timestamps();
         });

@@ -1,0 +1,17 @@
+
+.list-group,.d-flex .container{
+    max-width: 700px;
+}
+
+
+.task-container .d-flex .container, .task-container .list-group{
+    max-width: 500px;
+}
+
+.form-check-input:checked + .form-checked-content {
+    opacity: .5;
+}
+
+.complete-task {
+    text-decoration: line-through;
+}

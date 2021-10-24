@@ -10,6 +10,6 @@ class TasksList extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name','description','user_id'
+        'title','description','user_id'
     ];
 }

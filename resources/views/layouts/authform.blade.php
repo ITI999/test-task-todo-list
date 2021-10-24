@@ -25,6 +25,19 @@
             </div>
 
             <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+            @if($errors->any())
+                <div class="d-flex justify-content-center ">
+                    <div class="list-group list-group-flush w-100 my-4 ">
+                        <div class='alert alert-danger p-1'>
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                    <li>{{$error}}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </form>
     </main>
 </body>
