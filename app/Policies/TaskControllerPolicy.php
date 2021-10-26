@@ -30,4 +30,12 @@ class TaskControllerPolicy
         return Response::deny("You don't have any rights to see this page");
 
     }
+
+    public function listAccess(?User $user, TasksList $list): Response
+    {
+        if($user and $list->user_id == $user->id)
+            return Response::allow("Access");
+        return Response::deny("You don't have any rights to see this page");
+
+    }
 }

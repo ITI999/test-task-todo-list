@@ -6,57 +6,50 @@ use App\Models\Task;
 use App\Models\TasksList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ListController extends Controller
 {
-    /**
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    function show(Request $req, TasksList $list){
-        $this->authorize('list-access',[self::class, $list]);
-        if(!$list){
-            return redirect(route('home'));
+    function show(Request $req){
+        if(!Auth::check()){
+            return view('home');
         }
-        $tasks = Task::
-            where('list_id',$list->id)
+        $lists = TasksList::where('user_id',Auth::id())
             ->orderBy('created_at','desc')
             ->get();
-        return view('list',['tasks' => $tasks, 'list' => $list]);
+        return view('/home',['lists' => $lists]);
     }
 
-    function add(Request $req,TasksList  $list){
-
-        $this->authorize('list-access',[self::class, $list]);
-        $validate = $req->validate([
-            'task' => 'required'
-        ]);
-        $validate['list_id'] = $list->id;
-        $validate['is_complete'] = false;
-        $task = Task::create($validate);
-
-        if($task){
-            return redirect("/list/$list->id");
-        }
-
-        return redirect("/list/$list->id")->withErrors([
-            'add' => 'Не удалось добавить задачу'
-        ]);
-
-    }
-
-    function delete(Request $req,TasksList  $list){
-        $this->authorize('list-access',[self::class, $list]);
-
-        if($list){
-            Task::where('id',$req['task_delete'])
-                ->where('list_id',$list->id)
+    function delete(Request $req, TasksList $list){
+        if($list->user_id == Auth::id()) {
+            Task::where('list_id',$list->id)
                 ->delete();
+            $list->delete();
+            return 'success';
+        }
+        return 'failed';
+    }
+
+    function add(Request $req){
+        $rules = [
+            'title' => 'required',
+            'description' => ''
+        ];
+        $validator = Validator::make($req->all(),$rules);
+
+        if($validator->fails()){
+            return view('includes/errors',['errors' => $validator->getMessageBag()])->render();
+        }
+        $validateForm = $validator->validated();
+        $validateForm['user_id'] = Auth::id();
+        $list = TasksList::create($validateForm);
+        if($list){
+            return view('includes/listnode',['list' => $list])->render();
         }
 
-        return redirect("/list/$list->id");
+        return view('includes/errors')->withErrors([
+            'add' => 'Ошибка при добавлении списка'
+        ]);
     }
 
-    function __construct(){
-        $this->middleware('auth');
-    }
 }

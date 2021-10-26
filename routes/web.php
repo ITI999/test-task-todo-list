@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -18,11 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class,'show'])->name('home');
-Route::post('/', [HomeController::class,'add'])->middleware('auth');
-Route::delete('/', [HomeController::class,'delete'])->middleware('auth');
+Route::get('/', [ListController::class,'show'])->name('home');
+Route::post('/list/add',[ListController::class, 'add'])->middleware('auth');
+Route::delete('/list/delete/{list}',[ListController::class, 'delete'])->middleware('auth');
 
-Route::get('/home', [HomeController::class,'show']);
+
+Route::get('/home', [ListController::class,'show']);
 
 Route::get('/login',function (){
     if(Auth::check()){
@@ -45,9 +45,10 @@ Route::get('/logout', function(){
     return redirect(route('home'));
 });
 
-Route::get('/list/{list}',[ListController::class, 'show'])->name('list');
-Route::post('/list/{list}',[ListController::class, 'add']);
-Route::delete('/list/{list}',[ListController::class, 'delete']);
+Route::get('/list/{list}',[TaskController::class, 'show'])->name('list');
 
-Route::post('/task/check/{task}',[TaskController::class,'check'])->name('check');
+
+Route::post('/list/{list}/check/{task}',[TaskController::class,'check'])->name('check');
+Route::post('/list/{list}/add',[TaskController::class,'add']);
+Route::delete('/list/{list}/delete/{task}',[TaskController::class,'delete']);
 
