@@ -1,4 +1,4 @@
 ## Test task for junior PHP-developer.
 
-Just a simple todo list.
-site address: http://a0593180.xsph.ru
+<p>Just a simple todo list.</p>
+<p>Site address: http://a0593180.xsph.ru</p>
